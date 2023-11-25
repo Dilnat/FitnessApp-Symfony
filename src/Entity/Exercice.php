@@ -19,6 +19,7 @@ class Exercice
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: GroupeMusculaire::class)]
+    #[ORM\JoinTable(name:"exercice_groupeMusculaire")]
     private Collection $groupeMusculaire;
 
     #[ORM\ManyToOne]

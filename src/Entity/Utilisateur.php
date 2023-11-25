@@ -44,12 +44,15 @@ class Utilisateur
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\ManyToMany(targetEntity: Medaille::class)]
+    #[ORM\JoinTable(name:"Recompense")]
     private Collection $medaille;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
+    #[ORM\JoinTable(name:"Favori")]
     private Collection $favoris;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
+    #[ORM\JoinTable(name:"Historique")]
     private Collection $historique;
 
 

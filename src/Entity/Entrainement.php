@@ -19,6 +19,7 @@ class Entrainement
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Exercice::class)]
+    #[ORM\JoinTable(name:"exercices_par_entrainement")]
     private Collection $exercices;
 
     #[ORM\Column(length: 255)]
