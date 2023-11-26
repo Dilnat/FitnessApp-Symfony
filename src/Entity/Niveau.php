@@ -14,6 +14,7 @@ class Niveau
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['exercice:read','entrainement:read','utilisateur:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

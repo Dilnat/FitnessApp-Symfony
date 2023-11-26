@@ -117,14 +117,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Medaille::class)]
     #[ORM\JoinTable(name: "Recompense")]
+    #[Groups(['utilisateur:read'])]
     private Collection $medaille;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
     #[ORM\JoinTable(name: "Favori")]
+    #[Groups(['utilisateur:read'])]
     private Collection $favoris;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
     #[ORM\JoinTable(name: "Historique")]
+    #[Groups(['utilisateur:read'])]
     private Collection $historique;
 
 
