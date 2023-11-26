@@ -24,6 +24,15 @@ use Doctrine\ORM\Mapping as ORM;
                 )
             ],
         ),
+        new GetCollection(
+            uriTemplate: '/utilisateurs/{id}/favoris',
+            uriVariables: [
+                'id' => new Link(
+                    fromProperty: 'favoris',
+                    fromClass: Utilisateur::class
+                )
+            ],
+        ),
     ]
 )]
 #[ApiResource]

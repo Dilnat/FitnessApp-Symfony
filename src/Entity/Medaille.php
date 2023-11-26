@@ -3,11 +3,25 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\MedailleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedailleRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/utilisateurs/{id}/medailles',
+            uriVariables: [
+                'id' => new Link(
+                    fromProperty: 'medaille',
+                    fromClass: Utilisateur::class
+                )
+            ],
+        ),
+    ]
+)]
 class Medaille
 {
     #[ORM\Id]
