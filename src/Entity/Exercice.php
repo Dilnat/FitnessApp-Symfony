@@ -18,15 +18,15 @@ class Exercice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: GroupeMusculaire::class)]
+    #[ORM\ManyToMany(targetEntity: GroupeMusculaire::class, fetch: "EAGER")]
     #[ORM\JoinTable(name:"exercice_groupeMusculaire")]
     private Collection $groupeMusculaire;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeExercice $typeExercice = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
     private ?Niveau $difficulte = null;
 

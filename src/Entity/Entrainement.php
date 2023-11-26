@@ -43,7 +43,7 @@ class Entrainement
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: Exercice::class)]
+    #[ORM\ManyToMany(targetEntity: Exercice::class, fetch: "EAGER")]
     #[ORM\JoinTable(name:"exercices_par_entrainement")]
     private Collection $exercices;
 
