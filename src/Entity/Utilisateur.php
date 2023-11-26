@@ -12,6 +12,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\AddToFavoritesController;
 use App\Controller\AddTrainingToHistoryController;
+use App\Controller\RemoveFromHistoriqueController;
+use App\Controller\RemoveFromFavoritesController;
 use App\Repository\UtilisateurRepository;
 use App\State\UtilisateurProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,9 +43,17 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/utilisateurs/{id}/historique',
             controller: AddTrainingToHistoryController::class,
             security: "object == user"),
+        new Delete(
+            uriTemplate: '/utilisateurs/{id}/historique',
+            controller: RemoveFromHistoriqueController::class,
+            security: "object == user"),
         new Post(
             uriTemplate: '/utilisateurs/{id}/favoris',
             controller: AddToFavoritesController::class,
+            security: "object == user"),
+        new Delete(
+            uriTemplate: '/utilisateurs/{id}/favoris',
+            controller: RemoveFromFavoritesController::class,
             security: "object == user"),
     ], normalizationContext: ["groups" => ["utilisateur:read"]],
 )]
