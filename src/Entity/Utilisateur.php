@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Controller\AddTrainingToHistoryController;
 use App\Repository\UtilisateurRepository;
 use App\State\UtilisateurProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,6 +36,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "object == user",
             validationContext: ["groups" => ["Default", "utilisateur:update"]],
             processor: UtilisateurProcessor::class),
+        new Post(
+            uriTemplate: '/utilisateurs/{id}/add_training',
+            controller: AddTrainingToHistoryController::class,
+            security: "object == user"),
     ], normalizationContext: ["groups" => ["utilisateur:read"]],
 )]
 #[UniqueEntity('mail', message: "Mail déjà utilisé")]
@@ -50,11 +55,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['utilisateur:read','entrainement:read'])]
+    #[Groups(['utilisateur:read', 'entrainement:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['utilisateur:read','entrainement:read'])]
+    #[Groups(['utilisateur:read', 'entrainement:read'])]
     private ?string $prenom = null;
 
     #[ApiProperty(readable: false, writable: false)]
@@ -63,8 +68,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotNull(groups: ['utilisateur:create'])]
     #[Assert\NotBlank(groups: ['utilisateur:create'])]
-    #[Assert\Length(min: 8, max: 30, minMessage: "Minimum 8 caractères", maxMessage: "Maximum 30 caractères",groups: ['utilisateur:create'])]
-    #[Assert\Regex(pattern: "#^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,30}$#", message: "Mot de passe non valide",groups: ['utilisateur:create'])]
+    #[Assert\Length(min: 8, max: 30, minMessage: "Minimum 8 caractères", maxMessage: "Maximum 30 caractères", groups: ['utilisateur:create'])]
+    #[Assert\Regex(pattern: "#^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,30}$#", message: "Mot de passe non valide", groups: ['utilisateur:create'])]
     #[Groups(['utilisateur:create', 'utilisateur:update'])]
     private ?string $plainPassword = '';
 
@@ -73,7 +78,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotNull(groups: ['utilisateur:create'])]
     #[Assert\NotBlank(groups: ['utilisateur:create'])]
-    #[Assert\Email(message: 'Mail non valide',groups: ['utilisateur:create'])]
+    #[Assert\Email(message: 'Mail non valide', groups: ['utilisateur:create'])]
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(['utilisateur:read', 'utilisateur:create', 'utilisateur:update'])]
     private ?string $mail = null;
