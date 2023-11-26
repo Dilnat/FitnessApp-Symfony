@@ -13,12 +13,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AddTrainingToHistoryController extends AbstractController
 {
-    #[Route('/api/utilisateurs/{id}/add_training', name: 'add_training_to_history', methods: ['POST'])]
+    #[Route('/api/utilisateurs/{id}/historique', name: 'add_training_to_history', methods: ['POST'])]
     public function __invoke(Request $request, Utilisateur $user, EntityManagerInterface $entityManager): Response
     {
         // Récupérer l'ID de l'entraînement à partir des données JSON
         $requestData = json_decode($request->getContent(), true);
-        $trainingId = $requestData['training_id']; // Assurez-vous que la clé correspond à celle dans le JSON
+        $trainingId = $requestData['entrainement_id']; // Assurez-vous que la clé correspond à celle dans le JSON
 
         // Récupérer l'entraînement à partir de l'ID
         $training = $entityManager->getRepository(Entrainement::class)->find($trainingId);

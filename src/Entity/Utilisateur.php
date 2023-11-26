@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Controller\AddToFavoritesController;
 use App\Controller\AddTrainingToHistoryController;
 use App\Repository\UtilisateurRepository;
 use App\State\UtilisateurProcessor;
@@ -37,8 +38,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             validationContext: ["groups" => ["Default", "utilisateur:update"]],
             processor: UtilisateurProcessor::class),
         new Post(
-            uriTemplate: '/utilisateurs/{id}/add_training',
+            uriTemplate: '/utilisateurs/{id}/historique',
             controller: AddTrainingToHistoryController::class,
+            security: "object == user"),
+        new Post(
+            uriTemplate: '/utilisateurs/{id}/favoris',
+            controller: AddToFavoritesController::class,
             security: "object == user"),
     ], normalizationContext: ["groups" => ["utilisateur:read"]],
 )]
