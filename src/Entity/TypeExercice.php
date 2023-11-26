@@ -14,10 +14,11 @@ class TypeExercice
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['exercice:read','entrainement:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['exercice:read'])]
+    #[Groups(['exercice:read','entrainement:read'])]
     private ?string $nom = null;
 
     public function getId(): ?int
