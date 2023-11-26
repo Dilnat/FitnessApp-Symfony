@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\NiveauRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NiveauRepository::class)]
 #[ApiResource]
@@ -16,6 +17,7 @@ class Niveau
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['exercice:read','entrainement:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]

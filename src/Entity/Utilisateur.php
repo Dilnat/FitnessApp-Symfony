@@ -50,11 +50,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['utilisateur:read'])]
+    #[Groups(['utilisateur:read','entrainement:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['utilisateur:read'])]
+    #[Groups(['utilisateur:read','entrainement:read'])]
     private ?string $prenom = null;
 
     #[ApiProperty(readable: false, writable: false)]

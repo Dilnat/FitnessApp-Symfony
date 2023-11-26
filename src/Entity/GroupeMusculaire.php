@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\GroupeMusculaireRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GroupeMusculaireRepository::class)]
 #[ApiResource]
@@ -16,6 +17,7 @@ class GroupeMusculaire
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['exercice:read'])]
     private ?string $nom = null;
 
     public function getId(): ?int

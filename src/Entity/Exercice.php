@@ -8,44 +8,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['exercice:read']]
+)]
 class Exercice
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['exercice:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: GroupeMusculaire::class, fetch: "EAGER")]
     #[ORM\JoinTable(name:"exercice_groupeMusculaire")]
+    #[Groups(['exercice:read'])]
     private Collection $groupeMusculaire;
 
     #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['exercice:read'])]
     private ?TypeExercice $typeExercice = null;
 
     #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['exercice:read'])]
     private ?Niveau $difficulte = null;
 
     #[ORM\Column]
+    #[Groups(['exercice:read'])]
     private array $equipement = [];
 
     #[ORM\Column]
+    #[Groups(['exercice:read'])]
     private ?int $tempsExo = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['exercice:read'])]
     private ?string $photo = null;
 
     #[ORM\Column]
+    #[Groups(['exercice:read'])]
     private ?int $kcal = null;
 
     #[ORM\Column]
+    #[Groups(['exercice:read'])]
     private ?int $reposApresExo = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['exercice:read'])]
     private ?string $nom = null;
 
     public function __construct()

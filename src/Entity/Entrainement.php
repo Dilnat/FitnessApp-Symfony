@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EntrainementRepository::class)]
 #[ApiResource(
@@ -34,6 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
             ],
         ),
     ]
+    , normalizationContext: ["groups" => ["entrainement:read"]],
 )]
 #[ApiResource]
 class Entrainement
@@ -41,26 +43,33 @@ class Entrainement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['entrainement:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Exercice::class, fetch: "EAGER")]
     #[ORM\JoinTable(name:"exercices_par_entrainement")]
+    #[Groups(['entrainement:read'])]
     private Collection $exercices;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['entrainement:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['entrainement:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['entrainement:read'])]
     private ?Utilisateur $createur = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['entrainement:read'])]
     private ?\DateTimeInterface $dateAjout = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['entrainement:read'])]
     private ?string $image = null;
 
     public function __construct()
