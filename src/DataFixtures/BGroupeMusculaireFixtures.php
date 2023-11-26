@@ -11,13 +11,14 @@ class BGroupeMusculaireFixtures extends Fixture
     public const GROUPE_MUSCULAIRE_REFERENCE = 'groupe-musculaire';
     public function load(ObjectManager $manager): void
     {
-        // create 5 groupMusculaire! Bam!
-        for ($i = 0; $i < 5; $i++) {
-            $groupMusculaire = new GroupeMusculaire();
-            $groupMusculaire->setNom('groupMusculaire' . $i);
-            $manager->persist($groupMusculaire);
-            print_r(self::GROUPE_MUSCULAIRE_REFERENCE . $i . "\n");
-            $this->addReference(self::GROUPE_MUSCULAIRE_REFERENCE . $i, $groupMusculaire);
+        $muscleGroups = ['Biceps', 'Triceps', 'Deltoids', 'Pectorals', 'Abdominals', 'Quadriceps', 'Hamstrings', 'Calves'];
+        $i=0;
+        foreach ($muscleGroups as $groupName) {
+            $groupeMusculaire = new GroupeMusculaire();
+            $groupeMusculaire->setNom($groupName);
+            $this->addReference(self::GROUPE_MUSCULAIRE_REFERENCE . $i, $groupeMusculaire);
+            $i++;
+            $manager->persist($groupeMusculaire);
         }
         $manager->flush();
     }

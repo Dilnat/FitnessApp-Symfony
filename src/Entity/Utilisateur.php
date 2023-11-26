@@ -2,57 +2,109 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UtilisateurRepository;
+use App\State\UtilisateurProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[ApiResource]
-class Utilisateur
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Delete(security: "object == user"),
+        new Post(denormalizationContext: ["groups" => ["utilisateur:create"]],
+            validationContext: ["groups" => ["Default", "utilisateur:create"]], processor: UtilisateurProcessor::class),
+        new Patch(denormalizationContext: ["groups" => ["utilisateur:update"]],
+            security: "object == user",
+            validationContext: ["groups" => ["Default", "utilisateur:update"]],
+            processor: UtilisateurProcessor::class),
+    ], normalizationContext: ["groups" => ["utilisateur:read"]],
+)]
+#[UniqueEntity('mail', message: "Mail déjà utilisé")]
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['utilisateur:read', 'entrainement:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['utilisateur:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['utilisateur:read'])]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ApiProperty(readable: false, writable: false)]
+    #[ORM\Column]
+    private ?string $password = null;
+
+    #[Assert\NotNull(groups: ['utilisateur:create'])]
+    #[Assert\NotBlank(groups: ['utilisateur:create'])]
+    #[Assert\Length(min: 8, max: 30, minMessage: "Minimum 8 caractères", maxMessage: "Maximum 30 caractères",groups: ['utilisateur:create'])]
+    #[Assert\Regex(pattern: "#^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,30}$#", message: "Mot de passe non valide",groups: ['utilisateur:create'])]
+    #[Groups(['utilisateur:create', 'utilisateur:update'])]
+    private ?string $plainPassword = '';
+
+    #[ORM\Column]
+    private array $roles = [];
+
+    #[Assert\NotNull(groups: ['utilisateur:create'])]
+    #[Assert\NotBlank(groups: ['utilisateur:create'])]
+    #[Assert\Email(message: 'Mail non valide',groups: ['utilisateur:create'])]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['utilisateur:read', 'utilisateur:create', 'utilisateur:update'])]
     private ?string $mail = null;
 
     #[ORM\Column]
+    #[Groups(['utilisateur:read'])]
     private ?int $taille = null;
 
     #[ORM\Column]
+    #[Groups(['utilisateur:read'])]
     private ?int $poids = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['utilisateur:read'])]
     private ?Niveau $niveau = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['utilisateur:read'])]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\ManyToMany(targetEntity: Medaille::class)]
-    #[ORM\JoinTable(name:"Recompense")]
+    #[ORM\JoinTable(name: "Recompense")]
     private Collection $medaille;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
-    #[ORM\JoinTable(name:"Favori")]
+    #[ORM\JoinTable(name: "Favori")]
     private Collection $favoris;
 
     #[ORM\ManyToMany(targetEntity: Entrainement::class)]
-    #[ORM\JoinTable(name:"Historique")]
+    #[ORM\JoinTable(name: "Historique")]
     private Collection $historique;
 
 
@@ -71,6 +123,31 @@ class Utilisateur
     public function getPhoto(): ?string
     {
         return $this->photo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword(): string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     */
+    public function setPlainPassword(string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
     }
 
     public function setPhoto(string $photo): static
@@ -235,4 +312,45 @@ class Utilisateur
 
         return $this;
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string)$this->mail;
+    }
+
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+
 }
