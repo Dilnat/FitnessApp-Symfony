@@ -19,7 +19,7 @@ class Exercice
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['exercice:read','entrainement:read','historique:read'])]
+    #[Groups(['exercice:read','entrainement:read','entrainements:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: GroupeMusculaire::class, fetch: "EAGER")]
@@ -34,15 +34,15 @@ class Exercice
 
     #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainement:read'])]
     private ?Niveau $difficulte = null;
 
     #[ORM\Column]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainement:read'])]
     private array $equipement = [];
 
     #[ORM\Column]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainements:read','entrainement:read'])]
     private ?int $tempsExo = null;
 
     #[ORM\Column(length: 255)]
@@ -50,15 +50,15 @@ class Exercice
     private ?string $photo = null;
 
     #[ORM\Column]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainements:read','entrainement:read'])]
     private ?int $kcal = null;
 
     #[ORM\Column]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainements:read','entrainement:read'])]
     private ?int $reposApresExo = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['exercice:read','historique:read','entrainement:read'])]
+    #[Groups(['exercice:read','entrainements:read','entrainement:read'])]
     private ?string $nom = null;
 
     public function __construct()

@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     fromClass: Utilisateur::class
                 )
             ],
-            normalizationContext: ["groups" => ["historique:read"]],
+            normalizationContext: ["groups" => ["entrainements:read"]],
         ),
         new GetCollection(
             uriTemplate: '/utilisateurs/{id}/favoris',
@@ -34,6 +34,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     fromClass: Utilisateur::class
                 )
             ],
+            normalizationContext: ["groups" => ["entrainements:read"]],
+        ),
+        new GetCollection(
+            uriTemplate: '/entrainements/all',
+            normalizationContext: ["groups" => ["entrainements:read"]],
         ),
     ],
     normalizationContext: ["groups" => ["entrainement:read"]]
@@ -45,33 +50,32 @@ class Entrainement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read', 'entrainements:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Exercice::class, fetch: "EAGER")]
     #[ORM\JoinTable(name: "exercices_par_entrainement")]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read', 'entrainements:read'])]
     private Collection $exercices;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read', 'entrainements:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read'])]
     private ?Utilisateur $createur = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['historique:read'])]
     private ?\DateTimeInterface $dateAjout = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['entrainement:read', 'historique:read'])]
+    #[Groups(['entrainement:read', 'entrainements:read'])]
     private ?string $image = null;
 
     public function __construct()
