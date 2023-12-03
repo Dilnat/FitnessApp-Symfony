@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RemoveFromFavoritesController extends AbstractController
 {
-    #[Route('/api/utilisateurs/{id}/favoris', name: 'remove_from_favorites', methods: ['POST'])]
+    #[Route('/api/utilisateurs/{id}/favoris', name: 'remove_from_favorites', methods: ['DELETE'])]
     public function __invoke(Request $request, Utilisateur $user, EntityManagerInterface $entityManager): Response
     {
         $requestData = json_decode($request->getContent(), true);
